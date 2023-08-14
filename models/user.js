@@ -17,7 +17,7 @@ class User {
    *    {username, password, first_name, last_name, phone}
    */
 
-  static async register({ username, password, first_name, last_name, phone }) {
+  static async register({ username, password, first_name, last_name, phone}) {
     console.log("register here", username, password);
     const hashPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
     const result = await db.query(
@@ -25,9 +25,12 @@ class User {
                               password,
                               first_name,
                               last_name,
-                              phone)
+                              phone,
+                              join_at,
+                              last_login_at
+                              )
           VALUES
-            ($1, $2, $3, $4, $5)
+            ($1, $2, $3, $4, $5, current_timestamp, current_timestamp)
           RETURNING username, password, first_name, last_name, phone`,
           [username, hashPassword, first_name, last_name, phone]);
 
@@ -122,7 +125,36 @@ class User {
    *   {username, first_name, last_name, phone}
    */
 
+
+
+
   static async messagesFrom(username) {
+    // const result = await db.query(
+    //   `SELECT m.id,
+    //          m.username,
+    //          m.body,
+    //          m.sent_at,
+    //          m.read_at,
+    //          u.last_name,
+    //          u.phone
+    //          u.first_name
+    //     FROM MESSAGE AS m
+    //       JOIN users AS u ON u.username = m.to_username
+    //       WHERE from_username = $1`, [username]
+    // )
+    //   return results.rows.map(m=>({
+    //     id = m.id,
+    //     to_user:{
+
+    //       username : m.
+    //       first_name : m.first_name
+    //       last_name:
+    //       phone:
+    //     },
+    //     body = m.body,
+    //     sent_at = m.sent_at,
+    //     read_at = m.read_at
+    //   }))
   }
 
   /** Return messages to this user.

@@ -48,3 +48,12 @@ CREATE TABLE messages (
   sent_at TIMESTAMP WITH TIME ZONE NOT NULL,
   read_at TIMESTAMP WITH TIME ZONE);
 
+
+INSERT INTO users
+VALUES ('Dan', "password", "Daniel", "Chau", 911),
+      ('Coco', "pass", "Co",'Ha',922)
+
+INSERT INTO messages
+
+
+
