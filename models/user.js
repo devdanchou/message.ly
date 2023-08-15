@@ -71,8 +71,6 @@ class User {
     if (!user) {
       return new NotFoundError(`No ${username} exists`);
     }
-
-    return result.rows[0];
   }
 
   /** All: basic info on all users:
