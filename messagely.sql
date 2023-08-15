@@ -23,6 +23,12 @@ CREATE TABLE messages (
   sent_at TIMESTAMP WITH TIME ZONE NOT NULL,
   read_at TIMESTAMP WITH TIME ZONE);
 
+INSERT INTO users
+VALUES ('Dan', "password", "Daniel", "Chau", 911, TIMESTAMP WITH TIME ZONE),
+      ('Coco', "pass", "Co",'Ha',922, TIMESTAMP WITH TIME ZONE);
+
+-- INSERT INTO messages
+
 
 \echo 'Delete and recreate messagely_test db?'
 \prompt 'Return for yes or control-C to cancel > ' foo
@@ -49,11 +55,9 @@ CREATE TABLE messages (
   read_at TIMESTAMP WITH TIME ZONE);
 
 
-INSERT INTO users
-VALUES ('Dan', "password", "Daniel", "Chau", 911),
-      ('Coco', "pass", "Co",'Ha',922)
 
-INSERT INTO messages
+
+
 
 
 
