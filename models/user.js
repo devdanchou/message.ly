@@ -17,11 +17,11 @@ class User {
    *    {username, password, first_name, last_name, phone}
    */
 
-  static async register({ username, password, first_name, last_name, phone}) {
+  static async register({ username, password, first_name, last_name, phone }) {
     console.log("register here", username, password);
     const hashPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
     const result = await db.query(
-          `INSERT INTO users (username,
+      `INSERT INTO users (username,
                               password,
                               first_name,
                               last_name,
@@ -32,7 +32,7 @@ class User {
           VALUES
             ($1, $2, $3, $4, $5, current_timestamp, current_timestamp)
           RETURNING username, password, first_name, last_name, phone`,
-          [username, hashPassword, first_name, last_name, phone]);
+      [username, hashPassword, first_name, last_name, phone]);
 
     return result.rows[0];
   }
@@ -44,14 +44,14 @@ class User {
           SELECT password
           FROM users
           WHERE username = $1`,
-          [username]);
+      [username]);
 
     const user = result.rows[0];
     // if (!user) {
     //   throw new NotFoundError(`No ${username} exists`);
     // }
-
-    return await bcrypt.compare(password, user.password) === true;
+    //TODO: check for user test case
+    return user && await bcrypt.compare(password, user.password) === true;
   }
 
   /** Update last_login_at for user */
@@ -64,7 +64,7 @@ class User {
                   SET last_login_at = CURRENT_TIMESTAMP
                   WHERE username = $1
                   RETURNING username`,
-                  [username]);
+      [username]);
 
     const user = result.rows[0];
 
@@ -104,7 +104,7 @@ class User {
                   last_login_at
             FROM users
             WHERE username = $1`,
-            [username]);
+      [username]);
 
     const user = results.rows[0];
 
@@ -133,26 +133,26 @@ class User {
              m.body,
              m.sent_at,
              m.read_at,
-             u.username,
              u.last_name,
              u.phone,
              u.first_name
         FROM messages AS m
           JOIN users AS u ON u.username = m.to_username
           WHERE from_username = $1`, [username]
-    )
-      return results.rows.map(m=>({
-        id: m.id,
-        to_user:{
-          username: m.to_username,
-          first_name: m.first_name,
-          last_name: m.last_name,
-          phone: m.phone
-        },
-        body: m.body,
-        sent_at: m.sent_at,
-        read_at: m.read_at
-      }))
+    );
+    // console.log("resultss rows here:",results.rows)
+    return results.rows.map(m => ({
+      id: m.id,
+      to_user: {
+        username: m.to_username,
+        first_name: m.first_name,
+        last_name: m.last_name,
+        phone: m.phone
+      },
+      body: m.body,
+      sent_at: m.sent_at,
+      read_at: m.read_at
+    }));
   }
 
   /** Return messages to this user.
@@ -176,19 +176,19 @@ class User {
         FROM messages AS m
           JOIN users AS u ON m.from_username = u.username
           WHERE to_username = $1`, [username]
-    )
-      return results.rows.map(m=>({
-        id: m.id,
-        from_user:{
-          username: m.from_username,
-          first_name: m.first_name,
-          last_name: m.last_name,
-          phone: m.phone
-        },
-        body: m.body,
-        sent_at: m.sent_at,
-        read_at: m.read_at
-      }))
+    );
+    return results.rows.map(m => ({
+      id: m.id,
+      from_user: {
+        username: m.from_username,
+        first_name: m.first_name,
+        last_name: m.last_name,
+        phone: m.phone
+      },
+      body: m.body,
+      sent_at: m.sent_at,
+      read_at: m.read_at
+    }));
   }
 }
 
