@@ -2,6 +2,8 @@
 
 const Router = require("express").Router;
 const router = new Router();
+const { authenicateJWT, ensureLoggedIn, ensureCorrectUser } = require("../middleware/auth");
+const Message = require("../models/message");
 
 /** GET /:id - get detail of message.
  *
@@ -15,6 +17,13 @@ const router = new Router();
  * Makes sure that the currently-logged-in users is either the to or from user.
  *
  **/
+
+router.get("/:id", ensureCorrectUser, async function(req, res, next) {
+  const id = req.params.id;
+  const message = await Message.get(id);
+
+  return res.json({ message });
+} )
 
 
 /** POST / - post message.
